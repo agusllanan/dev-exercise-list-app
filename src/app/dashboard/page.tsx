@@ -8,11 +8,13 @@ import {
   List,
   ListItem,
   ListItemButton,
+  ListItemSecondaryAction,
   ListItemText,
   Stack,
   Typography,
 } from '@mui/material'
 
+import { DeleteItemButton } from '@/components/deleteItemButton'
 export default async function Home() {
   const authUser = getCurrentAuthUser()
   const items = await listMyItems(authUser)
@@ -54,6 +56,9 @@ export default async function Home() {
                   </ListItemButton>
                 </ListItem>
                 {index < items.length - 1 && <Divider />}
+                <ListItemSecondaryAction>
+                  <DeleteItemButton id={item.id} />
+                </ListItemSecondaryAction>
               </Box>
             ))}
           </List>

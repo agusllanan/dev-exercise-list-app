@@ -1,4 +1,4 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app). It's a simple List App.
 
 ## Getting Started
 
@@ -12,6 +12,25 @@ yarn dev
 pnpm dev
 # or
 bun dev
+```
+
+Second, Clone the file .env.example and create a .env file
+Update the variable
+
+- NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY
+- CLERK_SECRET_KEY
+- DATABASE_URL
+
+Sync the actual schema with the new Database using
+
+```bash
+npx prisma migrate deploy
+```
+
+Check the synced migrations and validate schema
+
+```bash
+npx prisma migrate status
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
