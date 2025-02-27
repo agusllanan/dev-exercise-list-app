@@ -92,3 +92,12 @@ export const deleteItem = async (authUser: AuthUser, id: string): Promise<void> 
 
   await prisma.listItem.delete({ where: { id, authorId: authUser.id } })
 }
+
+export const getItemsByCategory = async (categoryId: string): Promise<ListItem[]> => {
+  const items = await prisma.listItem.findMany({ where: { categoryId } })
+  return items.map((item) => ({
+    id: item.id,
+    name: item.name,
+    photoUrl: item.photoUrl,
+  }))
+}
