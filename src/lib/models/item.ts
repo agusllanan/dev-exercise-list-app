@@ -15,11 +15,17 @@ type ListItemDetails = {
   name: string
   description: string | null
   photoUrl: string | null
+  categoryId: string
 }
 
 export const listMyItems = async (authUser: AuthUser): Promise<ListItem[]> => {
   const items = await prisma.listItem.findMany({ where: { authorId: authUser.id } })
-  return items.map((item) => ({ id: item.id, name: item.name, photoUrl: item.photoUrl }))
+  return items.map((item) => ({
+    id: item.id,
+    name: item.name,
+    photoUrl: item.photoUrl,
+    categoryId: item.categoryId,
+  }))
 }
 
 export const getItemDetails = async (
@@ -33,6 +39,7 @@ export const getItemDetails = async (
     name: listItem.name,
     description: listItem.description,
     photoUrl: listItem.photoUrl,
+    categoryId: listItem.categoryId,
   }
 }
 
@@ -41,14 +48,16 @@ export const createItem = async (
   name: string,
   description: string,
   photoUrl: string | null,
+  categoryId: string,
 ): Promise<ListItem> => {
   const schema = z.object({
     name: z.string().trim().min(1),
     description: z.string().trim().optional(),
     photoUrl: z.string().trim().url().optional(),
+    categoryId: z.string().trim(),
   })
 
-  const parse = schema.safeParse({ name, description, photoUrl })
+  const parse = schema.safeParse({ name, description, photoUrl, categoryId })
 
   if (!parse.success) {
     throw fromError(parse.error)
@@ -61,6 +70,7 @@ export const createItem = async (
       description: data.description,
       photoUrl: data.photoUrl,
       authorId: authUser.id,
+      categoryId: categoryId,
     },
   })
   return { id: listItem.id, name: listItem.name, photoUrl: listItem.photoUrl }
@@ -71,6 +81,7 @@ export const deleteItem = async (authUser: AuthUser, id: string): Promise<void> 
 
   if (item && item.photoUrl) {
     try {
+      console.log('Deleting blob:', item.photoUrl)
       const url = new URL(item.photoUrl)
       const pathname = url.pathname
       await del(pathname)

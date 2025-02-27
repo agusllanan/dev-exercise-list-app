@@ -14,9 +14,11 @@ import {
 } from '@mui/material'
 
 import { DeleteItemButton } from '@/components/deleteItemButton'
+import { listCategories } from '@/lib/models/category'
 export default async function Home() {
-  const authUser = getCurrentAuthUser()
+  const authUser = await getCurrentAuthUser()
   const items = await listMyItems(authUser)
+  const categories = await listCategories()
 
   return (
     <Stack spacing={2} sx={{ maxWidth: 400 }}>
@@ -36,7 +38,7 @@ export default async function Home() {
           in your list
         </Typography>
 
-        <AddItemButton />
+        <AddItemButton categories={categories} />
       </Box>
       {items.length > 0 && (
         <Box

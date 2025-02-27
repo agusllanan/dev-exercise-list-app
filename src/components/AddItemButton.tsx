@@ -10,15 +10,22 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  MenuItem,
+  Select,
   Stack,
   TextField,
   Typography,
 } from '@mui/material'
+import { Category } from '@prisma/client'
 import Image from 'next/image'
 import { useSnackbar } from 'notistack'
 import { useRef, useState } from 'react'
 
-export const AddItemButton = () => {
+type AddItemButtonProps = {
+  categories: Pick<Category, 'id' | 'name'>[]
+}
+
+export const AddItemButton = ({ categories }: AddItemButtonProps) => {
   const { enqueueSnackbar } = useSnackbar()
   const [open, setOpen] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
@@ -98,7 +105,21 @@ export const AddItemButton = () => {
                 rows={4}
               />
 
-              {/* Photo upload section */}
+              <Select
+                name="categoryId"
+                label="Category"
+                fullWidth
+                displayEmpty
+                defaultValue={categories.length > 0 ? categories[0].id : ''}
+                inputProps={{ 'aria-label': 'Category' }}
+              >
+                {categories.map((category) => (
+                  <MenuItem key={category.id} value={category.id}>
+                    {category.name}
+                  </MenuItem>
+                ))}
+              </Select>
+
               <Box sx={{ border: '1px dashed grey', p: 2, borderRadius: 1 }}>
                 <input
                   type="file"
