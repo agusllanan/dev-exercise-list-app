@@ -1,3 +1,4 @@
+import { del } from '@vercel/blob'
 import { z } from 'zod'
 import { fromError } from 'zod-validation-error'
 import prisma from '../prisma'
@@ -66,5 +67,17 @@ export const createItem = async (
 }
 
 export const deleteItem = async (authUser: AuthUser, id: string): Promise<void> => {
+  const item = await prisma.listItem.findFirst({ where: { id, authorId: authUser.id } })
+
+  if (item && item.photoUrl) {
+    try {
+      const url = new URL(item.photoUrl)
+      const pathname = url.pathname
+      await del(pathname)
+    } catch (error) {
+      console.error('Error deleting blob:', error)
+    }
+  }
+
   await prisma.listItem.delete({ where: { id, authorId: authUser.id } })
 }

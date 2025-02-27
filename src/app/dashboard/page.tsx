@@ -8,7 +8,6 @@ import {
   List,
   ListItem,
   ListItemButton,
-  ListItemSecondaryAction,
   ListItemText,
   Stack,
   Typography,
@@ -50,15 +49,21 @@ export default async function Home() {
           <List disablePadding>
             {items.map((item, index) => (
               <Box key={item.id}>
-                <ListItem key={item.id} disableGutters disablePadding>
+                <ListItem
+                  key={item.id}
+                  disableGutters
+                  disablePadding
+                  secondaryAction={
+                    <Box sx={{ mr: 1 }}>
+                      <DeleteItemButton id={item.id} />
+                    </Box>
+                  }
+                >
                   <ListItemButton href={`/dashboard/item/${item.id}`}>
                     <ListItemText primary={item.name} />
                   </ListItemButton>
                 </ListItem>
                 {index < items.length - 1 && <Divider />}
-                <ListItemSecondaryAction>
-                  <DeleteItemButton id={item.id} />
-                </ListItemSecondaryAction>
               </Box>
             ))}
           </List>
